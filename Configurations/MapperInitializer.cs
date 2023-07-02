@@ -8,8 +8,11 @@ namespace HotelListingApi.Configurations
     {
         public MapperInitializer()
         {
-            CreateMap<Country, CountryDto>();
-            CreateMap<Hotel, HotelDto>();
+            CreateMap<Country, CountryDto>().ReverseMap();
+            CreateMap<Country, CreateHotelDto>().ReverseMap();
+            CreateMap<Hotel, HotelDto>().ReverseMap();
+            CreateMap<Hotel, CreateHotelDto>().ReverseMap();
+            CreateMap<ApiUser, UserDto>().ReverseMap();
         }
     }
 }

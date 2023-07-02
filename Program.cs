@@ -1,3 +1,4 @@
+using HotelListingApi;
 using HotelListingApi.Configurations;
 using HotelListingApi.Data;
 using HotelListingApi.Data.IRepository;
@@ -18,6 +19,9 @@ builder.Services.AddControllers().AddNewtonsoftJson(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+
 builder.Services.AddCors( x => {
     x.AddPolicy("AllowAll", builder => 
         builder.AllowAnyOrigin()
@@ -31,6 +35,7 @@ builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
