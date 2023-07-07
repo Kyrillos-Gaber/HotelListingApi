@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HotelListingApi.Data.IRepository;
 using HotelListingApi.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelListingApi.Controllers
@@ -38,6 +39,7 @@ namespace HotelListingApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

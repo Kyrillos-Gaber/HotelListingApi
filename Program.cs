@@ -3,6 +3,7 @@ using HotelListingApi.Configurations;
 using HotelListingApi.Data;
 using HotelListingApi.Data.IRepository;
 using HotelListingApi.Data.IRepository.Repository;
+using HotelListingApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Serilog;
@@ -21,6 +22,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddCors( x => {
     x.AddPolicy("AllowAll", builder => 
@@ -41,6 +43,8 @@ builder.Services.AddAutoMapper(typeof(MapperInitializer));
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+builder.Services.AddScoped<IAuthManager,  AuthManager>();
+
 
 
 var app = builder.Build();
@@ -56,6 +60,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseCors("AllowAll");

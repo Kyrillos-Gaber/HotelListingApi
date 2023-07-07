@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using HotelListingApi.Configurations.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelListingApi.Data
@@ -11,15 +12,11 @@ namespace HotelListingApi.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Country>().HasData(
-                new Country { Id = 1, Name = "LA", CountryCode = "51543" },
-                new Country { Id = 2, Name = "Cairo", CountryCode = "78453" }
-            );
+            builder.ApplyConfiguration(new RoleConfiguration());
 
-            builder.Entity<Hotel>().HasData(
-                new Hotel { Id = 1, Name = "Four Season", CountryId = 2, Rating = 4.5 },
-                new Hotel { Id = 2, Name = "Cataract", CountryId = 1, Rating = 4.5 }
-            );
+            builder.ApplyConfiguration(new CountryConfiguration());
+            
+            builder.ApplyConfiguration(new HotelConfiguration());
         }
 
         public DbSet<Country> Countries { get; set; }
