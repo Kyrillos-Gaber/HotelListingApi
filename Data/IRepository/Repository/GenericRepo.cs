@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Services.WebApi;
 using System.Linq.Expressions;
 
 namespace HotelListingApi.Data.IRepository.Repository
@@ -37,7 +38,7 @@ namespace HotelListingApi.Data.IRepository.Repository
             return item!;
         }
 
-        public async Task<IList<T>> GetAll(Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includes = null)
+        public async Task<IList<T>> GetAll(QueryParams queryParams, Expression<Func<T, bool>>? expression = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, List<string>? includes = null)
         {
             IQueryable<T> query = dbSet;
 
@@ -51,8 +52,22 @@ namespace HotelListingApi.Data.IRepository.Repository
             if (orderBy != null)
                 query = orderBy(query);
 
-            List<T>? item = await query.AsNoTracking().ToListAsync();
-            return item!;
+            if (queryParams is not null)
+                return
+                    await query
+                    .AsNoTracking()
+                    .Skip((queryParams!.PageNumber - 1) * queryParams.PageSize)
+                    .Take(queryParams.PageSize).ToListAsync();
+
+
+            return await query.AsNoTracking().ToListAsync();
+        }
+
+        
+
+        public Task<IList<T>> GetAll(Expression<Func<T, bool>>? expression, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy, List<string>? includes, QueryParams? queryParams)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task Insert(T entity)
@@ -70,5 +85,7 @@ namespace HotelListingApi.Data.IRepository.Repository
             dbSet.Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
         }
+
+        
     }
 }

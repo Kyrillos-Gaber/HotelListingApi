@@ -26,11 +26,11 @@ namespace HotelListingApi.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllHotels()
+        public async Task<IActionResult> GetAllHotels([FromQuery] QueryParams queryParams)
         {
             try
             {
-                IList<Hotel> hotels = await unitOfWork.HotelsRepo.GetAll();
+                IList<Hotel> hotels = await unitOfWork.HotelsRepo.GetAll(queryParams);
                 return Ok(mapper.Map<IList<HotelDto>>(hotels));
             }
             catch (Exception ex)
