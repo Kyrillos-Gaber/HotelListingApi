@@ -28,16 +28,10 @@ namespace HotelListingApi.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllHotels([FromQuery] QueryParams queryParams)
         {
-            try
-            {
-                IList<Hotel> hotels = await unitOfWork.HotelsRepo.GetAll(queryParams);
-                return Ok(mapper.Map<IList<HotelDto>>(hotels));
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, ex.Message);
-                return StatusCode(500, "CONGRATS!!! Internal Server Error");
-            }
+            //throw new NotImplementedException();
+            IList<Hotel> hotels = await unitOfWork.HotelsRepo.GetAll(queryParams);
+            return Ok(mapper.Map<IList<HotelDto>>(hotels));
+            
         }
 
         //[Authorize]

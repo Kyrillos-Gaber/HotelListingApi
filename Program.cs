@@ -56,6 +56,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.ConfiguringExceptionHandler();
+
 app.UseHttpsRedirection();
 
 app.UseRouting();

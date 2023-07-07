@@ -1,8 +1,10 @@
 ﻿using HotelListingApi.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 namespace HotelListingApi;
@@ -41,6 +43,25 @@ public static class ServiceExtensions
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Key)),
                 ValidAudience = "localhost"
             };
+        });
+    }
+
+    public static void ConfiguringExceptionHandler(this IApplicationBuilder app)
+    {
+        app.UseExceptionHandler(appBuilder =>
+        {
+            appBuilder.Run(async httpContext =>
+            {
+                httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                httpContext.Response.ContentType = "application/json";
+                IExceptionHandlerFeature? contextFeature = httpContext.Features.Get<IExceptionHandlerFeature>();
+
+                if (contextFeature is not null)
+                {
+                    Log.Error($"Somthing is wrong at {contextFeature.Error}");
+                    await httpContext.Response.WriteAsync($"status code: ");
+                }
+            });
         });
     }
 }
